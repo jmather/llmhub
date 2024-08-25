@@ -7,6 +7,7 @@ class ConfigManager:
         self.global_config_path = os.path.expanduser(global_config_path)
         self.overlay_config_path = overlay_config_path
         self.global_config = self.load_config(self.global_config_path)
+        self.global_config = self.merge_configs(self.get_default_config(), self.global_config)
         self.model_config_path = os.path.expanduser(self.global_config.get('model_config_path', "~/.llmhub/models.yaml"))
         self.model_config = self.load_config(self.model_config_path)
         self.global_config['models'] = self.model_config
