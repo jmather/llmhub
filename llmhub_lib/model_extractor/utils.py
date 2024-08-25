@@ -6,14 +6,14 @@ SEPARATOR_PATTERN = '|'.join([ re.escape(c) for c in SEPARATOR_CHARACTERS ])
 
 def find_quantization(file_name):
     # We split by "." or "-" to get the parts of the file name
-    file_name_parts = re.split(rf'{SEPARATOR_PATTERN}', file_name)
+    file_name_parts = re.split(rf'[-.]' , file_name)
     print(f"[utils.find_quantization] File name: {file_name}")
     print(f"[utils.find_quantization] File name parts: {file_name_parts}")
     # second to last part is the quantization, if it exists
     quantization = None
     if len(file_name_parts) > 2:
         quantization_part = file_name_parts[-2]
-        if quantization_part.startswith('Q'):
+        if quantization_part.startswith('Q') or quantization_part.startswith('quantized') or quantization_part == 'f16':
             quantization = quantization_part
 
     return quantization

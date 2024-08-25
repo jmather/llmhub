@@ -1,4 +1,5 @@
 # web_server.py
+import re
 
 from flask import Flask, request, jsonify
 from llmhub_lib.actions import update_processes, start_specific_process, stop_all_processes, stop_specific_process, start_proxy_process, stop_proxy_process
@@ -167,8 +168,22 @@ def handle_chat_completion(data):
 def list_openai_models():
     models = list(state_manager.list_states())
     # we need to filter out the proxy processes
-    models = [model for model in models if not model.startswith("proxy-")]
-    return jsonify({"data": models}), 200
+    # real_models = [model for model in models if not model.startswith("proxy-")]
+
+    all_models = []
+    last_model = None
+    for model in models:
+        if model.startswith("proxy-"):
+            continue
+
+        base_model = re.sub(r'-[0-9]+$', '', model)
+        print(f"Base model: {base_model} of model: {model}")
+        if base_model != last_model:
+            last_model = base_model
+            all_models.append(base_model)
+
+        all_models.append(model)
+    return jsonify({"data": all_models}), 200
 
 if __name__ == '__main__':
     config = AppDependencyContainer.get("config_manager").get_merged_config()
