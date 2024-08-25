@@ -1,4 +1,5 @@
-# llmhub_lib/helpers.py
+import os
+import sys
 
 def update_processes(service_manager):
     service_manager.update_services()
@@ -21,8 +22,8 @@ def start_proxy_process(service_manager):
         running_processes = service_manager.state_manager.list_states()
 
         if proxy_process_name not in running_processes:
-            # Assumes web_server.py is being run as the proxy process
-            script_path = "/path/to/web_server.py"  # Adjust the path as necessary
+            # Determine the path to the web_server.py file dynamically
+            script_path = os.path.join(os.path.dirname(__file__), 'web_server.py')
             proxy_cmd = [sys.executable, str(script_path)]
             service_manager.process_manager.start_process(proxy_cmd, proxy_process_name, web_port)
         else:

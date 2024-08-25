@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="llmhub-cli",
-    version="0.1.3",
+    version="0.1.4",
     author="Jacob Mather",
     author_email="jmather@jmather.com",
     description="LLMHub is a lightweight management platform designed to streamline working with LLMs.",
