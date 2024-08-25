@@ -128,6 +128,7 @@ def handle_completion(data, endpoint):
     response_data = clean_response_data(response_data, suitable_process)
 
     return jsonify(response_data), response.status_code
+
 def handle_chat_completion(data):
     model_name = data.get('model')
     messages = data.get('messages')

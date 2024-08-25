@@ -4,6 +4,7 @@ from .model_manager import ModelManager
 from .state_manager import StateManager
 from .log_manager import LogManager
 from .process_manager import ProcessManager
+from .service_manager import ServiceManager  # New import
 import os
 
 # Initialize the dependency container
@@ -27,6 +28,12 @@ AppDependencyContainer.register("process_manager", lambda: ProcessManager(
     log_manager=AppDependencyContainer.get("log_manager"),
 ))
 AppDependencyContainer.register("model_manager", lambda: ModelManager(
+    config_manager=AppDependencyContainer.get("config_manager"),
+    state_manager=AppDependencyContainer.get("state_manager")
+))
+AppDependencyContainer.register("service_manager", lambda: ServiceManager(  # Register ServiceManager
+    process_manager=AppDependencyContainer.get("process_manager"),
+    model_manager=AppDependencyContainer.get("model_manager"),
     config_manager=AppDependencyContainer.get("config_manager"),
     state_manager=AppDependencyContainer.get("state_manager")
 ))
