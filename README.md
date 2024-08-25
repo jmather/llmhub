@@ -18,7 +18,7 @@ LLMHub is a lightweight management platform designed to streamline the operation
 
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/yourusername/llmhub.git
+   git clone https://github.com/jmather/llmhub.git
    cd llmhub
    ```
 
