@@ -1,0 +1,302 @@
+openapi: 3.0.3
+info:
+  title: LLMHub API
+  description: API for managing LLM processes and interacting with models.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+    description: Local server
+
+paths:
+  /llms/update:
+    post:
+      summary: Update and restart all configured LLM processes
+      description: This endpoint updates and restarts all configured processes based on the current configuration.
+      responses:
+        '200':
+          description: Successfully updated and restarted processes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Processes updated."
+
+  /llms/start:
+    post:
+      summary: Start a specific LLM process
+      description: Starts a specific LLM process with the provided model, quantization, engine, context size, and port.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - model_name
+              properties:
+                model_name:
+                  type: string
+                  description: Name of the model to start.
+                  example: "MythoMax-L2-13B"
+                quant:
+                  type: string
+                  description: Quantization level to use for the model.
+                  example: "Q5_K_M"
+                engine:
+                  type: string
+                  description: Engine to use for running the model.
+                  example: "llamacppserver"
+                context_size:
+                  type: integer
+                  description: Context size for the model process.
+                  example: 4096
+                port:
+                  type: integer
+                  description: Port to run the model on.
+                  example: 8081
+      responses:
+        '200':
+          description: Successfully started the process
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Started process for MythoMax-L2-13B with quant Q5_K_M and context size 4096."
+
+  /llms/stop:
+    post:
+      summary: Stop a specific or all LLM processes
+      description: Stops a specific LLM process or all processes if no model name is provided.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                model_name:
+                  type: string
+                  description: Name of the model to stop.
+                  example: "MythoMax-L2-13B"
+      responses:
+        '200':
+          description: Successfully stopped the process(es)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Stopped process MythoMax-L2-13B."
+
+  /llms/status:
+    get:
+      summary: Get the status of all LLM processes
+      description: Returns the status of all running and available models.
+      responses:
+        '200':
+          description: Successfully retrieved the status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: Identifier for the model process.
+                        object:
+                          type: string
+                          example: "model"
+                        status:
+                          type: string
+                          example: "running"
+                        file_type:
+                          type: string
+                          example: "gguf"
+
+  /v1/completions:
+    post:
+      summary: OpenAI-Compatible Completions API
+      description: Endpoint for handling text completions compatible with the OpenAI API.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - model
+                - prompt
+              properties:
+                model:
+                  type: string
+                  description: Model to use for completion.
+                  example: "MythoMax-L2-13B"
+                prompt:
+                  type: string
+                  description: Text prompt to generate a completion for.
+                  example: "Once upon a time,"
+                max_tokens:
+                  type: integer
+                  description: Maximum number of tokens to generate.
+                  example: 100
+                temperature:
+                  type: number
+                  description: Sampling temperature.
+                  example: 0.7
+      responses:
+        '200':
+          description: Successfully generated a completion
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: "cmpl-5TftC4Oj1mjP2"
+                  object:
+                    type: string
+                    example: "text_completion"
+                  model:
+                    type: string
+                    example: "MythoMax-L2-13B"
+                  choices:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        text:
+                          type: string
+                          example: "Once upon a time, in a faraway land..."
+                        index:
+                          type: integer
+                          example: 0
+                        logprobs:
+                          type: object
+                          nullable: true
+                        finish_reason:
+                          type: string
+                          example: "length"
+
+  /v1/chat/completions:
+    post:
+      summary: OpenAI-Compatible Chat Completions API
+      description: Endpoint for handling chat completions compatible with the OpenAI API.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - model
+                - messages
+              properties:
+                model:
+                  type: string
+                  description: Model to use for chat completion.
+                  example: "MythoMax-L2-13B"
+                messages:
+                  type: array
+                  description: Messages to use in the chat completion.
+                  items:
+                    type: object
+                    properties:
+                      role:
+                        type: string
+                        description: The role of the message sender.
+                        example: "user"
+                      content:
+                        type: string
+                        description: The content of the message.
+                        example: "Hello, how are you?"
+                max_tokens:
+                  type: integer
+                  description: Maximum number of tokens to generate.
+                  example: 100
+                temperature:
+                  type: number
+                  description: Sampling temperature.
+                  example: 0.7
+      responses:
+        '200':
+          description: Successfully generated a chat completion
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: "chatcmpl-2MDgq9yERjmv2"
+                  object:
+                    type: string
+                    example: "chat_completion"
+                  model:
+                    type: string
+                    example: "MythoMax-L2-13B"
+                  choices:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: object
+                          properties:
+                            role:
+                              type: string
+                              example: "assistant"
+                            content:
+                              type: string
+                              example: "I'm good, how can I assist you today?"
+                        index:
+                          type: integer
+                          example: 0
+                        finish_reason:
+                          type: string
+                          example: "length"
+
+  /v1/models:
+    get:
+      summary: List available models
+      description: Returns a list of available models.
+      responses:
+        '200':
+          description: Successfully retrieved the list of models
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: Identifier for the model.
+                          example: "MythoMax-L2-13B"
+                        object:
+                          type: string
+                          example: "model"
+                        status:
+                          type: string
+                          example: "stopped"
+                        file_type:
+                          type: string
+                          example: "gguf"

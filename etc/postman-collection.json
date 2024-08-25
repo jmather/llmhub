@@ -1,0 +1,241 @@
+{
+  "info": {
+    "name": "LLMHub API",
+    "description": "Collection for testing the LLMHub API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Update Processes",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/llms/update",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "llms",
+            "update"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Start Specific Process",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"model_name\": \"MythoMax-L2-13B\",\n    \"quant\": \"Q5_K_M\",\n    \"engine\": \"llamacppserver\",\n    \"context_size\": 4096,\n    \"port\": 8081\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/llms/start",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "llms",
+            "start"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Stop Specific Process",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"model_name\": \"MythoMax-L2-13B\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/llms/stop",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "llms",
+            "stop"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Stop All Processes",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/llms/stop",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "llms",
+            "stop"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get LLM Status",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/llms/status",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "llms",
+            "status"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Completion",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"model\": \"MythoMax-L2-13B\",\n    \"prompt\": \"Once upon a time,\",\n    \"max_tokens\": 100,\n    \"temperature\": 0.7\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/v1/completions",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "completions"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Chat Completion",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"model\": \"MythoMax-L2-13B\",\n    \"messages\": [\n        {\n            \"role\": \"user\",\n            \"content\": \"Hello, how are you?\"\n        }\n    ],\n    \"max_tokens\": 100,\n    \"temperature\": 0.7\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/v1/chat/completions",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "chat",
+            "completions"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "List Models",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/v1/models",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "models"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "type": "string"
+    }
+  ]
+}

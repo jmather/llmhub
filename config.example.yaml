@@ -1,0 +1,24 @@
+model_search_paths:
+  - ~/.cache/lm-studio/models
+  - ~/.cache/huggingface/hub
+
+on_start:
+  TheBloke/MythoMax-L2-13B-GGUF:
+    quant: Q5_K_M
+    engine: llamacppserver
+    context_size: [512, 2048, 4196]
+
+port: 8080
+enable_proxy: true
+engine_port_min: 8081
+engine_port_max: 10000
+
+engines:
+  llamacppserver:
+    path: /Users/user/llama.cpp/llama-server
+    arguments: --color -t 20 --parallel 2 --mlock --metrics --verbose
+    model_flag: "-m"
+    context_size_flag: "-c"
+    port_flag: "--port"
+    api_key_flag: "--api-key"
+    file_types: [ gguf ]  # This engine only supports gguf files
