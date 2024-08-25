@@ -1,11 +1,9 @@
 # actions.py
+import sys
 
-from .process_manager import ProcessManager
-from .config_manager import ConfigManager
-from .state_manager import StateManager
-from .log_manager import LogManager
-from .model_manager import ModelManager
 from .app_dependency_container import AppDependencyContainer
+from llmhub_lib import web_server
+from pathlib import Path
 
 config_manager = AppDependencyContainer.get("config_manager")
 state_manager = AppDependencyContainer.get("state_manager")
@@ -16,16 +14,16 @@ model_manager = AppDependencyContainer.get("model_manager")
 
 def start_proxy_process():
     """Start the proxy (web server) process if not already running."""
-    config = config_manager.get_merged_config()
+    config = config_manager.get_merged_config
     if config.get('enable_proxy', False):
         web_port = config.get('port', 5000)
         proxy_process_name = f"proxy-{web_port}"
-        running_processes = state_manager.list_states()
+        running_processes = state_manager.list_states
 
         if proxy_process_name not in running_processes:
-            proxy_cmd = [
-                "python", "web_server.py"
-            ]
+            # Dynamically determine the location of web_server.py
+            script_path = Path(web_server.__file__).resolve()
+            proxy_cmd = [sys.executable, str(script_path)]
             print(f"Attempting to start proxy process: {proxy_cmd} on port {web_port}")
             process_manager.start_process(proxy_cmd, proxy_process_name, web_port)
             print(f"Proxy process {proxy_process_name} should now be running.")
