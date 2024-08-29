@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="llmhub-cli",
-    version="0.1.5",
+    version="0.1.6",
     author="Jacob Mather",
     author_email="jmather@jmather.com",
     description="LLMHub is a lightweight management platform designed to streamline working with LLMs.",
@@ -24,7 +24,7 @@ setup(
         ],
     },
     package_data={
-        '': ['web_server.py'],  # Include the web_server.py file in the package
+        'llmhub_lib': ['web_server.py'],  # Include the web_server.py file in the package
     },
     classifiers=[
         "Programming Language :: Python :: 3",
