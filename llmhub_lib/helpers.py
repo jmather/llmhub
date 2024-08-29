@@ -31,6 +31,9 @@ def start_proxy_process(service_manager):
                 import pkg_resources
                 script_path = pkg_resources.resource_filename('llmhub_lib', 'web_server.py')
 
+            print(f"Starting proxy process {proxy_process_name} on port {web_port}."
+                  f"Script path: {script_path}")
+
             if not os.path.isfile(script_path):
                 raise FileNotFoundError(f"web_server.py not found at {script_path}")
 

@@ -3,6 +3,7 @@ config.yaml
 # Virtualenv
 .venv/
 venv/
+.venv*
 
 # Distribution / packaging
 build/
