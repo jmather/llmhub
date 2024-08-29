@@ -163,39 +163,56 @@ def handle_chat_completion(data):
 
     return jsonify(response_data), response.status_code
 
-# OpenAI-Compatible Models Endpoint
 @app.route('/v1/models', methods=['GET'])
 def list_openai_models():
     models = list(state_manager.list_states())
 
+    model_clusters = {}
     all_models = []
-    last_model = None
 
+    # Organize models into clusters by their base model names
     for model in models:
         if model.startswith("proxy-"):
             continue
 
+        # Extract base model name without context size
         base_model = re.sub(r'-[0-9]+$', '', model)
+        context_size = re.search(r'-([0-9]+)$', model)
 
-        if base_model != last_model:
-            last_model = base_model
+        if base_model not in model_clusters:
+            model_clusters[base_model] = []
 
-        # Extract owned_by from the first part of the model name
-        owned_by = base_model.split('/')[0] if '/' in base_model else 'unknown'
-
-        model_data = {
+        model_clusters[base_model].append({
             "id": model,
             "object": "model",
-            "created": None,  # You could set this to a specific timestamp or leave it as None if not applicable
-            "owned_by": owned_by,
-            "permission": [],  # Assuming no specific permissions
-            "root": base_model,  # This would be the base model name without quantization/context size
-            "parent": None  # Assuming no fine-tuning, or set to another model ID if applicable
-        }
+            "created": None,  # Set to specific timestamp if applicable
+            "owned_by": base_model.split('/')[0] if '/' in base_model else 'unknown',
+            "permission": [],
+            "root": base_model,
+            "parent": None,
+            "context_size": int(context_size.group(1)) if context_size else None
+        })
 
-        all_models.append(model_data)
+    # Create ghost entries and add real models
+    for base_model, cluster in model_clusters.items():
+        # Create ghost entry
+        ghost_entry = {
+            "id": base_model,
+            "object": "model",
+            "created": None,  # Set to specific timestamp if applicable
+            "owned_by": base_model.split('/')[0] if '/' in base_model else 'unknown',
+            "permission": [],
+            "root": base_model,
+            "parent": None,
+        }
+        all_models.append(ghost_entry)
+
+        # Sort the cluster by context size and add to the list
+        sorted_cluster = sorted(cluster, key=lambda x: x['context_size'])
+        all_models.extend(sorted_cluster)
 
     return jsonify({"data": all_models}), 200
+
 if __name__ == '__main__':
     config = AppDependencyContainer.get("config_manager").get_merged_config()
     web_port = config.get('port', 5000)  # Default to 5000 if not specified in the config
