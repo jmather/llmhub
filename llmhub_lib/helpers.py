@@ -23,7 +23,7 @@ def start_proxy_process(service_manager):
 
         if proxy_process_name not in running_processes:
             # Determine the path to the web_server.py file dynamically
-            script_path = os.path.join(os.path.dirname(__file__), 'web_server.py')
+            script_path = os.path.join(os.path.dirname(__file__ + '/..'), 'web_server.py')
             proxy_cmd = [sys.executable, str(script_path)]
             service_manager.process_manager.start_process(proxy_cmd, proxy_process_name, web_port)
         else:
