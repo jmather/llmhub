@@ -8,7 +8,7 @@ service_manager = AppDependencyContainer.get("service_manager")
 @click.argument('model_name', required=False)
 def start(model_name=None):
     """Start a specific model process or all processes if no model_name is provided."""
-    if model_name.startswith("proxy-"):
+    if model_name and model_name.startswith("proxy-"):
         start_proxy_process(service_manager)
     elif model_name:
         service_manager.start_service(model_name, quant="Q5_K_M")  # Example quant value
@@ -20,7 +20,7 @@ def start(model_name=None):
 def stop(model_name=None):
     """Stop a specific process or all processes if no model_name is provided."""
     # Stop the proxy process if the model_name starts with "proxy-"
-    if model_name.startswith("proxy-"):
+    if model_name and model_name.startswith("proxy-"):
         stop_proxy_process(service_manager)
     elif model_name:
         service_manager.stop_service(model_name)
@@ -31,7 +31,7 @@ def stop(model_name=None):
 @click.argument('model_name', required=False)
 def restart(model_name=None):
     """Restart a specific process or all processes if no model_name is provided."""
-    if model_name.startswith("proxy-"):
+    if model_name and model_name.startswith("proxy-"):
         stop_proxy_process(service_manager)
         start_proxy_process(service_manager)
     elif model_name:
