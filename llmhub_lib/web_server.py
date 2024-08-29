@@ -164,28 +164,38 @@ def handle_chat_completion(data):
     return jsonify(response_data), response.status_code
 
 # OpenAI-Compatible Models Endpoint
-
 @app.route('/v1/models', methods=['GET'])
 def list_openai_models():
     models = list(state_manager.list_states())
-    # we need to filter out the proxy processes
-    # real_models = [model for model in models if not model.startswith("proxy-")]
 
     all_models = []
     last_model = None
+
     for model in models:
         if model.startswith("proxy-"):
             continue
 
         base_model = re.sub(r'-[0-9]+$', '', model)
-        print(f"Base model: {base_model} of model: {model}")
+
         if base_model != last_model:
             last_model = base_model
-            all_models.append(base_model)
 
-        all_models.append(model)
+        # Extract owned_by from the first part of the model name
+        owned_by = base_model.split('/')[0] if '/' in base_model else 'unknown'
+
+        model_data = {
+            "id": model,
+            "object": "model",
+            "created": None,  # You could set this to a specific timestamp or leave it as None if not applicable
+            "owned_by": owned_by,
+            "permission": [],  # Assuming no specific permissions
+            "root": base_model,  # This would be the base model name without quantization/context size
+            "parent": None  # Assuming no fine-tuning, or set to another model ID if applicable
+        }
+
+        all_models.append(model_data)
+
     return jsonify({"data": all_models}), 200
-
 if __name__ == '__main__':
     config = AppDependencyContainer.get("config_manager").get_merged_config()
     web_port = config.get('port', 5000)  # Default to 5000 if not specified in the config
