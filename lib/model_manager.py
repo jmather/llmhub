@@ -33,6 +33,13 @@ class ModelManager:
         """Get the list of running processes related to models."""
         return self.state_manager.list_states()
 
+    def get_model_port(self, process_name):
+        """Get the port number associated with a running model process."""
+        state = self.state_manager.load_state(process_name)
+        if state:
+            return state.get('port')
+        return None
+
     def match_model(self, model_name):
         """Match a given model name to a running process, if any."""
         running_processes = self.get_running_processes()

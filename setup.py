@@ -24,7 +24,7 @@ setup(
         ],
     },
     package_data={
-        'llmhub_lib': ['web_server.py'],  # Include the web_server.py file in the package
+        'lib': ['web_server.py'],  # Include the web_server.py file in the package
     },
     classifiers=[
         "Programming Language :: Python :: 3",
