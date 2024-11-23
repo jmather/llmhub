@@ -1,3 +1,7 @@
+# NOTICE
+
+This repo is deprecated. The current version is [built in node](https://github.com/jmather/node-llmhub).
+
 # LLMHub CLI
 
 LLMHub CLI is a command-line interface tool designed to manage and interact with various LLM (Large Language Model) servers. It allows you to start, stop, update, and manage LLM processes easily and efficiently.
